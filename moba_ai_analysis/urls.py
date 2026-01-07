@@ -16,6 +16,6 @@ urlpatterns = [
     path("password-reset", auth_handlers.password_reset, name="password_reset"),
     # path("test-protected-api", auth_handlers.test_protected_api, name="test_protected_api"),
 
-    path("match_events", match_handlers.match_events, name="match_events"),
-    path("match_vision_graph", match_handlers.match_vision_graph, name="match_vision_graph"),
+    path("match-events", match_handlers.match_events, name="match_events"),
+    path("match-vision-graph", match_handlers.match_vision_graph, name="match_vision_graph"),
 ]

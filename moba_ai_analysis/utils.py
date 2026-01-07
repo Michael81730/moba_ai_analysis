@@ -1,12 +1,20 @@
 from rest_framework_simplejwt.authentication import JWTAuthentication
+from rest_framework_simplejwt.exceptions import InvalidToken
 from django.core.validators import validate_email as django_validate_email
 from django.core.exceptions import ValidationError
 
-def is_authenticated(request):
+def check_auth(request):
     JWT_authenticator = JWTAuthentication()
-    response = JWT_authenticator.authenticate(request)
-
-    return response is None
+    try:
+        response = JWT_authenticator.authenticate(request)
+    except InvalidToken as ex:
+        print(f'ex.detail: {ex.detail}')
+        return (False, "Token is invalid or expired")
+   
+    if response is None:
+        return (False, "User is not authenticated")
+    
+    return (True, None)
 
 def validate_username(username):
     # validate username length

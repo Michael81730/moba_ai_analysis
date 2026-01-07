@@ -7,7 +7,7 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.exceptions import TokenError, ExpiredTokenError
 from http import HTTPStatus
 import json
-from .utils import validate_username, validate_password, validate_email, is_authenticated
+from .utils import validate_username, validate_password, validate_email
 
 @require_http_methods(["POST"])
 def user_signup(request):
@@ -66,19 +66,4 @@ def user_logout(request):
     return JsonResponse({'message':'Logged out successfully'}, status=HTTPStatus.OK)
 
 def password_reset(request):
-    
     pass
-
-# @require_http_methods(["GET"])
-# def test_protected_api(request):
-#     if is_authenticated(request):
-#         return JsonResponse({'message':'User is not authenticated'}, status=HTTPStatus.UNAUTHORIZED)
-
-#     return JsonResponse({'message':'User is authenticated'}, status=HTTPStatus.OK)
-
-# @require_http_methods(["GET"])
-# def vision_event_graph(request):
-#     if is_authenticated(request):
-#         return JsonResponse({'message':'User is not authenticated'}, status=HTTPStatus.UNAUTHORIZED)
-
-#     return JsonResponse({'message':'Vision event graph generated'}, status=HTTPStatus.OK)

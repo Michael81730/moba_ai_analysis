@@ -12,7 +12,7 @@ import cloudinary
 import cloudinary.uploader
 import time
 from .models import VisionGraph
-from .utils import is_authenticated
+from .utils import check_auth
 
 HTML_DIR = 'ti14-vision/data'
 EVENTS_DATA_DIR = 'ti14-vision/output'
@@ -22,8 +22,9 @@ CLOUDINARY_CONFIG_FILE_PATH = 'moba_ai_analysis/cloudinary_config.json'
 @require_http_methods(["GET"])
 def match_events(request):
     # check auth token
-    if is_authenticated(request):
-        return JsonResponse({'message':'User is not authenticated'}, status=HTTPStatus.UNAUTHORIZED)
+    check_auth_response = check_auth(request);
+    if not check_auth_response[0]:
+        return JsonResponse({'message': check_auth_response[1]}, status=HTTPStatus.UNAUTHORIZED)
 
     # validate parameters
     match_id = request.GET.get('match_id')
@@ -37,7 +38,7 @@ def match_events(request):
             generate_match_data(match_id)
         except Exception as ex:
             print(f'Internal error: {ex}')
-            return JsonResponse({'message':'Server encountered an internal error'}, status=HTTPStatus.INTERNAL_SERVER_ERROR)
+            return JsonResponse({'message':'Failed to get events data for the selected match. Please make sure the match ID is valid.'}, status=HTTPStatus.INTERNAL_SERVER_ERROR)
     
     # process events csv data
     with open(events_data_file_path, mode='r', newline='') as file:
@@ -51,8 +52,9 @@ def match_events(request):
 @require_http_methods(["GET"])
 def match_vision_graph(request):
     # check auth token
-    if is_authenticated(request):
-        return JsonResponse({'message':'User is not authenticated'}, status=HTTPStatus.UNAUTHORIZED)
+    check_auth_response = check_auth(request);
+    if not check_auth_response[0]:
+        return JsonResponse({'message': check_auth_response[1]}, status=HTTPStatus.UNAUTHORIZED)
 
     # validate parameters
     match_id = request.GET.get('match_id')
@@ -134,6 +136,7 @@ def generate_match_data(match_id, our_side='Dire'):
     except subprocess.CalledProcessError as e:
         print(f"Error running target script: {e}")
         print(f"Stderr: {e.stderr}")
+        raise e
 
 def upload_vision_graph(vision_graph_file_path, vision_graph_id):
     with open(CLOUDINARY_CONFIG_FILE_PATH, "r") as file:
