@@ -1,0 +1,16 @@
+services:
+  django:
+    image: michael81730/moba-ai-analysis-django:latest
+    container_name: django
+    restart: always
+    expose:
+      - "8000"
+
+  nginx:
+    image: michael81730/moba-ai-analysis-nginx:latest
+    container_name: nginx
+    restart: always
+    depends_on:
+      - "django"
+    ports:
+      - "80:80"

@@ -25,7 +25,10 @@ SECRET_KEY = 'django-insecure-*n+&*wlh0leqgj%yi$g&w^a4*^5y#(2)9$(un#-t#^n!l&(b12
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    '127.0.0.1',
+    'host.docker.internal'
+]
 
 # Application definition
 
@@ -88,7 +91,7 @@ WSGI_APPLICATION = 'mysite.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django_mongodb_backend',
-        'HOST': 'mongodb://localhost:27017/',
+        'HOST': 'mongodb://host.docker.internal:27017/',
         'NAME': 'moba_ai_analysis',
     },
 }
