@@ -39,11 +39,17 @@ def user_login(request):
     print(data)
 
     # username & password precheck
+    if not validate_username(data['username']):
+        return JsonResponse({'message':'Username is invalid'}, status=HTTPStatus.BAD_REQUEST) 
+    
 
     user = authenticate(request, username=data['username'], password=data['password'])
+    print(user)
+    
     # print(user)
     if user is not None:
         refresh = RefreshToken.for_user(user)
+        print(refresh)
         return JsonResponse({
             'refresh': str(refresh),
             'access': str(refresh.access_token),

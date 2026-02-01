@@ -4,6 +4,6 @@ class Validator(ABC):
     name = ""
 
     @abstractmethod
-    def validate(value):
+    def validate(self, value):
         pass
     

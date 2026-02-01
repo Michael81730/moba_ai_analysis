@@ -19,6 +19,8 @@ def check_auth(request):
 def validate_username(username):
     # validate username length
     # validate username only includes letter, numbers, underscore
+    if not username.isalnum():
+        return False
     
     return True
 
