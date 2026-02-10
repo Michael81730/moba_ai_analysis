@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -91,8 +92,10 @@ WSGI_APPLICATION = 'mysite.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django_mongodb_backend',
-        'HOST': 'mongodb://host.docker.internal:27017/',
+        'HOST': os.getenv("MONGODB_ATLAS_HOST"),
         'NAME': 'moba_ai_analysis',
+        'USER': os.getenv("MONGODB_ATLAS_USER"),
+        'PASSWORD': os.getenv("MONGODB_ATLAS_PASSWORD")
     },
 }
 

@@ -1,6 +1,10 @@
 services:
   django:
     image: michael81730/moba-ai-analysis-django:latest
+    environment:
+      MONGODB_ATLAS_HOST: xxxxxxxx
+      MONGODB_ATLAS_USER: xxxxxxxx
+      MONGODB_ATLAS_PASSWORD: xxxxxxxx
     container_name: django
     restart: always
     expose:
@@ -13,4 +17,6 @@ services:
     depends_on:
       - "django"
     ports:
-      - "80:80"
+      - "800:800"
+    volumes: 
+      - C:\Users\Public\Documents\zhitongguigu\moba_ai_analysis\certs:/etc/nginx/certs
