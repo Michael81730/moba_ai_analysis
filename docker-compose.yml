@@ -5,6 +5,9 @@ services:
       MONGODB_ATLAS_HOST: xxxxxxxx
       MONGODB_ATLAS_USER: xxxxxxxx
       MONGODB_ATLAS_PASSWORD: xxxxxxxx
+      CLOUDINARY_CLOUD_NAME: xxxxxxxx
+      CLOUDINARY_API_KEY: xxxxxxxx
+      CLOUDINARY_API_SECRET: xxxxxxxx
     container_name: django
     restart: always
     expose:

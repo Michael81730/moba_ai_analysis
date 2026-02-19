@@ -1,0 +1,22 @@
+name: Build and Push Docker Images to Docker Hub
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  publish_images:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v4
+      - name: build images
+        run: |
+          docker build -t michael81730/moba-ai-analysis-django -f dockerfile.django .
+          docker build -t michael81730/moba-ai-analysis-nginx -f dockerfile.nginx .
+      - name: push images to docker hub
+        run: |
+          docker login -u michael81730 -p ${{ secrets.DOCKER_HUB_TOKEN }}
+          docker push michael81730/moba-ai-analysis-django:latest
+          docker push michael81730/moba-ai-analysis-nginx:latest

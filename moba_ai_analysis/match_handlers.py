@@ -17,7 +17,6 @@ from .utils import check_auth
 HTML_DIR = 'ti14-vision/data'
 EVENTS_DATA_DIR = 'ti14-vision/output'
 VISION_GRAPH_DIR = 'ti14-vision/output'
-CLOUDINARY_CONFIG_FILE_PATH = 'moba_ai_analysis/cloudinary_config.json'
 
 @require_http_methods(["GET"])
 def match_events(request):
@@ -139,13 +138,11 @@ def generate_match_data(match_id, our_side='Dire'):
         raise e
 
 def upload_vision_graph(vision_graph_file_path, vision_graph_id):
-    with open(CLOUDINARY_CONFIG_FILE_PATH, "r") as file:
-        cloudinary_config = json.load(file)
 
     cloudinary.config(
-        cloud_name = cloudinary_config["cloud_name"],
-        api_key = cloudinary_config["api_key"],
-        api_secret = cloudinary_config["api_secret"]
+        cloud_name = os.getenv("CLOUDINARY_CLOUD_NAME"),
+        api_key = os.getenv("CLOUDINARY_API_KEY"),
+        api_secret = os.getenv("CLOUDINARY_API_SECRET")
     )
 
     timestamp = int(time.time())
