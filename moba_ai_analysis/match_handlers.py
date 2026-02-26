@@ -105,9 +105,12 @@ def download_html(match_id):
     if not os.path.isfile(html_file_path):
         chrome_options = Options()
         chrome_options.add_argument("--headless")
+        chrome_options.add_argument("--no-sandbox")
+        chrome_options.add_argument('--disable-gpu')
+        chrome_options.add_argument('--disable-dev-shm-usage')
         user_agent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.6167.140 Safari/537.36"
         chrome_options.add_argument("user-agent={}".format(user_agent))
-
+        
         driver = webdriver.Chrome(options=chrome_options)
         driver.get(f'https://www.dotabuff.com/matches/{match_id}/vision')
 
