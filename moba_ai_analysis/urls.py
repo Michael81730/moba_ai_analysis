@@ -18,4 +18,6 @@ urlpatterns = [
 
     path("match-events", match_handlers.match_events, name="match_events"),
     path("match-vision-graph", match_handlers.match_vision_graph, name="match_vision_graph"),
+
+    path("match-ai-analysis", match_handlers.match_ai_analysis, name="match_ai_analysis")
 ]

@@ -8,6 +8,7 @@ services:
       CLOUDINARY_CLOUD_NAME: xxxxxxxx
       CLOUDINARY_API_KEY: xxxxxxxx
       CLOUDINARY_API_SECRET: xxxxxxxx
+      GEMINI_API_KEY: xxxxxxxx
     container_name: django
     restart: always
     expose:

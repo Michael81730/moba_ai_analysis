@@ -13,6 +13,7 @@ import cloudinary.uploader
 import time
 from .models import VisionGraph
 from .utils import check_auth
+from google import genai
 
 HTML_DIR = 'ti14-vision/data'
 EVENTS_DATA_DIR = 'ti14-vision/output'
@@ -95,6 +96,48 @@ def match_vision_graph(request):
     print(f'upload_response:{upload_response}')
 
     return JsonResponse({'url': upload_response['secure_url']}, status=HTTPStatus.OK)
+
+@require_http_methods(["GET"])
+def match_ai_analysis(request):
+    # check auth token
+    check_auth_response = check_auth(request);
+    if not check_auth_response[0]:
+        return JsonResponse({'message': check_auth_response[1]}, status=HTTPStatus.UNAUTHORIZED)
+
+    # validate parameters
+    match_id = request.GET.get('match_id')
+    prompt = request.GET.get('prompt')
+
+    if match_id is None:
+        return JsonResponse({'message': 'match_id parameter is required'}, status=HTTPStatus.BAD_REQUEST)
+
+    if prompt is None:
+        return JsonResponse({'message': 'prompt parameter is required'}, status=HTTPStatus.BAD_REQUEST)
+    
+    # generate events csv data (through third-party tool) if it's not generated
+    events_data_file_path = f'{EVENTS_DATA_DIR}/events_{match_id}.csv'
+    if not os.path.isfile(events_data_file_path):
+        try:
+            generate_match_data(match_id)
+        except Exception as ex:
+            print(f'Internal error: {ex}')
+            return JsonResponse({'message':'Failed to get events data for the selected match. Please make sure the match ID is valid.'}, status=HTTPStatus.INTERNAL_SERVER_ERROR)
+    
+    ai_client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
+    uploaded_file = ai_client.files.upload(file=events_data_file_path)
+    uploaded_file_metadata = ai_client.files.get(name=uploaded_file.name)
+    print(f'Uploaded_file_metadata:{uploaded_file_metadata}')
+
+    response = ai_client.models.generate_content(
+        model="gemini-3-flash-preview",
+        contents=[prompt, uploaded_file]
+    )
+
+    print(f'AI response:{response.text}')
+
+    ai_client.files.delete(name=uploaded_file.name)
+
+    return JsonResponse({'result':response.text}, status=HTTPStatus.OK)
 
 def get_html_file_name(match_id):
     return f'{HTML_DIR}/Match {match_id} - Vision - DOTABUFF - Dota 2 Stats.html'
